@@ -51,6 +51,42 @@ void Insert(int* arr,int n){
 	}
 }
 
+void Stupid_Sort(int* arr, int n){
+     for (int i = 0; i < n; i++)
+        {
+            if (arr[i] > arr[i+1])
+            {
+                int tmp = arr[i];
+                arr[i] = arr[i + 1];
+                arr[i + 1] = tmp;
+            }
+        }
+
+}
+
+void Shell_standart(int *Array, int sz)
+{
+    int d = sz / 2;
+    int pop;
+
+    while (d > 0)
+    {
+        for (int i = 0; i < sz - d; i++)
+        {
+            int j = i;
+            while ((j >= 0) and (Array[j] > Array[j + d])){
+                pop = Array[j];
+                Array[j] = Array[j + d];
+                Array[j + d] = pop;
+                j-=1;
+            }
+        }
+        d = d/2;
+    }
+}
+
+
+
 vector<int> generate_random_vector(uint64_t n) {
 
     vector<int> ret(n);
@@ -90,16 +126,17 @@ int benchmark(SortFunction f, uint64_t n) {
 }
 
 int main() {
-    double time = 0;
-    ofstream fout("Bubble_sort00.csv", ios_base::out);
-    //fout << "iteration,time\n";
-
-    for (int i = 1; i < 100; ++i){
-        fout << 100*i << "," << (0 + benchmark(bubble_sort, 100*i)) << "\n";
-        cout << "N = " << i*100 << " done" << endl;
+    std::ofstream fout("Bubble.csv");
+    for (int N = 100; N < 30000; N += 100) {
+        auto arr = generate_random_vector(N);
+        auto start = std::chrono::high_resolution_clock::now();
+        bubble_sort(arr);
+        //sort(arr);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto nsec = end - start;
+        cout << nsec.count() << ", ";
     }
-    fout.close(); // закрываем файл
-    time = 0;
-
+    fout.close();
+    double time = 0;
     return 0;
 }
